@@ -1,135 +1,92 @@
-# Discretización de Controladores
+# Estabilidad en Sistemas Discretos
 
-En la discretización de controladores, buscamos una equivalencia entre el espacio de Laplace y el espacio Z.
+## 1. Estabilidad Absoluta
+Un sistema es estable cuando su salida es limitada ante una entrada limitada. En otras palabras, si se aplica una entrada escalón, la respuesta del sistema debe tener las mismas características de la entrada.
 
-## 1. Método de Invarianza al Impulso
-- Se utiliza la respuesta al impulso de \( C(s) \) para obtener \( C(z) \).
-- La transformada de Laplace del impulso \( e(t) = \delta(t) \) es \( e(s) = 1 \).
-- Si \( C(s) \) es estrictamente propia y se asume un tiempo de muestreo \( T \) suficientemente pequeño:
+## 2. Espacio de LaPlace vs Espacio Z
+- Aunque el concepto de estabilidad es el mismo, la ubicación de polos y ceros se comporta de manera diferente en los espacios de LaPlace y Z.
+- **Espacio de LaPlace**: La frontera de estabilidad es el eje vertical.
+- **Espacio Z**: La frontera de estabilidad es un círculo de radio uno centrado en el origen del plano complejo.
 
-  \[
-  C(z) = T \cdot Z \left\{ \mathcal{L}^{-1} \{ C(s) \} \bigg|_{t=kT} \right\}
-  \]
+## 3. Estabilidad Asintótica
+Un sistema es asintóticamente estable si su respuesta a cualquier conjunto de condiciones iniciales decae a cero asintóticamente en estado estable.
 
-## 2. Método de Invarianza al Paso
-- Sabiendo que la transformada Z de una función escalón es:
+\[
+\lim_{k \to \infty} y[k] = 0
+\]
 
-  \[
-  Z \{ e(t) \} = \frac{z}{z-1}
-  \]
+## 4. Estabilidad BIBO (Bounded Input - Bounded Output)
+Un sistema tiene estabilidad BIBO si su respuesta a una entrada acotada permanece acotada. Es decir, para cualquier entrada acotada, la salida satisface:
 
-- Se pueden igualar las transformadas inversas:
+\[
+|y[k]| \leq b_y \quad \text{para } k = 0, 1, 2, \dots
+\]
 
-  \[
-  Z^{-1} \left\{ C(z) \cdot \frac{z}{z-1} \right\} = \mathcal{L}^{-1} \left\{ C(s) \cdot \frac{1}{s} \right\}
-  \]
+Donde \( b_y \) es un número real o complejo que actúa como cota para \( y[k] \).
 
-- Resolviendo para \( C(z) \):
+## 5. Test de Jury
+Para determinar la estabilidad de un sistema, se utiliza el Test de Jury, que evalúa el polinomio característico de la función de transferencia en Z:
 
-  \[
-  C(z) = \frac{z-1}{z} Z \left\{ \mathcal{L}^{-1} \left\{ C(s) \cdot \frac{1}{s} \right\} \right\}
-  \]
+\[
+D(z) = a_0 z^n + a_1 z^{n-1} + \dots + a_{n-1} z + a_n
+\]
 
-## 3. Método de Euler Adelante
-- La aproximación discreta de la derivada es:
-
-  \[
-  \frac{d}{d(kT)}x(kT) \approx \frac{x(k+1) - x(k)}{T}
-  \]
-
-- Aplicando la transformada Z:
-
-  \[
-  sX(s) \approx \frac{z-1}{T} X(z)
-  \]
-
-  Por lo tanto:
-
-  \[
-  s \approx \frac{z-1}{T}
-  \]
-
-## 4. Método de Euler Atrás
-- La aproximación discreta de la derivada es:
-
-  \[
-  \frac{d}{d(kT)}x(kT) \approx \frac{x(k) - x(k-1)}{T}
-  \]
-
-- Aplicando la transformada Z:
-
-  \[
-  sX(s) \approx \frac{1 - z^{-1}}{T} X(z)
-  \]
-
-  Por lo tanto:
-
-  \[
-  s \approx \frac{1 - z^{-1}}{T}
-  \]
-
-## 5. Teorema de Muestreo de Nyquist
-- El teorema de muestreo relaciona la velocidad de muestreo \( f_s \) con la frecuencia de la señal medida.
-- La velocidad de muestreo \( f_s \) debe ser mayor que el doble de la componente de frecuencia más alta en la señal.
-  
-  \[
-  f_s > 2f_{\text{máx}}
-  \]
-
-- Esta frecuencia se conoce como la frecuencia de Nyquist.
+El sistema es estable si se cumplen todas las siguientes condiciones:
+- \( a_0 > 0 \)
+- \( a_n < a_0 \)
+- \( P(z) |_{z=1} > 0 \)
+- \( P(z) |_{z=-1} > 0 \) (si \( n \) es par) o \( P(z) |_{z=-1} < 0 \) (si \( n \) es impar)
+- Construir y verificar el arreglo de Jury.
 
 # Ejemplos
 
-## Ejemplo 1: Método de Euler Adelante
+## Ejemplo 1: Estabilidad Asintótica
 
-Dado un sistema continuo descrito por:
+Considera un sistema discreto con la siguiente ecuación de diferencia:
 
 \[
-H(s) = \frac{1}{s+1}
+y[k+1] = 0.5y[k]
 \]
 
-Discretizar usando el método de Euler Adelante con un tiempo de muestreo \( T = 0.1 \).
+### Solución:
+
+1. Para verificar la estabilidad asintótica, observamos que:
+
+   \[
+   \lim_{k \to \infty} y[k] = \lim_{k \to \infty} 0.5^k y[0] = 0
+   \]
+
+   Como la salida decae a cero, el sistema es asintóticamente estable.
+
+## Ejemplo 2: Test de Jury
+
+Dado un polinomio característico:
+
+\[
+D(z) = z^2 - 0.5z + 0.25
+\]
 
 ### Solución:
 
-1. Usamos la aproximación \( s \approx \frac{z-1}{T} \):
+1. Comprobamos las condiciones del Test de Jury:
+   - \( a_0 = 1 > 0 \)
+   - \( a_2 = 0.25 < a_0 \)
+   - \( P(z) |_{z=1} = 1 - 0.5 + 0.25 = 0.75 > 0 \)
+   - \( P(z) |_{z=-1} = 1 + 0.5 + 0.25 = 1.75 > 0 \)
 
-   \[
-   H(z) = \frac{1}{\frac{z-1}{T} + 1} = \frac{T}{z-1 + T}
-   \]
-
-2. Con \( T = 0.1 \):
-
-   \[
-   H(z) = \frac{0.1}{z - 0.9}
-   \]
-
-   Este es el sistema discretizado.
-
-## Ejemplo 2: Teorema de Muestreo de Nyquist
-
-Supongamos que tenemos una señal de frecuencia máxima \( f_{\text{máx}} = 500 \text{ Hz} \). Determina la frecuencia mínima de muestreo requerida.
-
-### Solución:
-
-1. Según el teorema de muestreo de Nyquist:
-
-   \[
-   f_s > 2 \times 500 = 1000 \text{ Hz}
-   \]
-
-2. La frecuencia mínima de muestreo requerida es \( f_s > 1000 \text{ Hz} \).
+   Cumpliendo todas las condiciones, el sistema es estable.
 
 # Conclusiones
 
-- **Discretización**: La discretización de controladores es crucial para implementar sistemas de control en tiempo real. La elección del método de discretización (invarianza al impulso, invarianza al paso, métodos de Euler) afecta la precisión y estabilidad del sistema discretizado.
+- **Estabilidad Absoluta**: Garantiza que el sistema responda de manera controlada ante entradas limitadas, esencial para sistemas de control en tiempo real.
   
-- **Método de Invarianza al Impulso**: Este método asegura que la respuesta al impulso del sistema discretizado sea idéntica a la del sistema continuo, bajo ciertas condiciones.
+- **Espacios de LaPlace vs Z**: La representación en el espacio Z es más adecuada para sistemas discretos, con la estabilidad determinada por la ubicación de los polos dentro del círculo unitario.
 
-- **Método de Invarianza al Paso**: Ideal para sistemas donde la respuesta al escalón es de mayor interés, pero puede no preservar la estabilidad en todos los casos.
+- **Estabilidad Asintótica**: Es una propiedad deseable en muchos sistemas, asegurando que la salida decaiga a cero con el tiempo.
 
-- **Métodos de Euler**: Ofrecen aproximaciones simples para discretizar sistemas, pero deben ser usados con cuidado, especialmente en sistemas donde la estabilidad es crítica.
+- **Estabilidad BIBO**: Importante en aplicaciones donde es crucial que las salidas permanezcan dentro de límites aceptables para entradas acotadas.
 
-- **Teorema de Nyquist**: Es fundamental en la discretización de señales, asegurando que la frecuencia de muestreo sea suficientemente alta para capturar toda la información relevante de la señal original sin aliasing.
+- **Test de Jury**: Es una herramienta efectiva para evaluar la estabilidad de sistemas discretos mediante la evaluación de su polinomio característico.
 
-Estos conceptos y métodos son fundamentales en el diseño y análisis de sistemas de control digital, permitiendo una transición efectiva entre sistemas continuos y discretos.
+Estos conceptos son fundamentales en el análisis y diseño de sistemas discretos, asegurando que se comporten de manera estable y predecible bajo diversas condiciones.
+
