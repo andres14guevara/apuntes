@@ -1,135 +1,86 @@
-# Discretización de Controladores
+# Resumen: Función en términos de muestras, Representación matemática de los sistemas, y Transformada Z
 
-En la discretización de controladores, buscamos una equivalencia entre el espacio de Laplace y el espacio Z.
+## 1. Función en términos de muestras
 
-## 1. Método de Invarianza al Impulso
-- Se utiliza la respuesta al impulso de \( C(s) \) para obtener \( C(z) \).
-- La transformada de Laplace del impulso \( e(t) = \delta(t) \) es \( e(s) = 1 \).
-- Si \( C(s) \) es estrictamente propia y se asume un tiempo de muestreo \( T \) suficientemente pequeño:
+En la semana dos se inició con el tema de "Función en términos de muestras", donde se explicó que si se tiene una función continua 𝑓(𝑡) y se quiere expresar matemáticamente su equivalente discreto, esto se debe hacer mediante la toma de muestras a intervalos regulares (tiempo de muestreo). Por ejemplo, si se tiene una función seno, para expresarla como una función discreta, se debe tomar el valor de la función en determinados intervalos de tiempo.
 
-  \[
-  C(z) = T \cdot Z \left\{ \mathcal{L}^{-1} \{ C(s) \} \bigg|_{t=kT} \right\}
-  \]
+Como se muestra en las imágenes, a partir de la función \( y(t) = 5\sin(1.04t) \) se toma una muestra cada 0.5 segundos. Este intervalo de tiempo puede variar; al ser más pequeño, se obtiene una muestra más precisa de la función, mientras que con un intervalo más grande, la discretización será menos exacta.
 
-## 2. Método de Invarianza al Paso
-- Sabiendo que la transformada Z de una función escalón es:
+## 2. Representación matemática de los sistemas
 
-  \[
-  Z \{ e(t) \} = \frac{z}{z-1}
-  \]
+Para llegar al punto anterior y poder realizar una discretización de una función, dependemos de una función de transferencia, la cual a su vez depende de representaciones matemáticas.
 
-- Se pueden igualar las transformadas inversas:
+### 2.1 Ecuaciones en Diferencia
 
-  \[
-  Z^{-1} \left\{ C(z) \cdot \frac{z}{z-1} \right\} = \mathcal{L}^{-1} \left\{ C(s) \cdot \frac{1}{s} \right\}
-  \]
+Al analizar estas ecuaciones, notamos que tienen términos como 'u' (entrada) y 'y' (salida). La dinámica del sistema se representa a través de una combinación lineal de estos términos, reflejando el comportamiento dinámico del sistema.
 
-- Resolviendo para \( C(z) \):
+Las ecuaciones en diferencia pueden ser homogéneas, lineales, o invariantes en el tiempo. Para solucionarlas, se suele emplear un método interactivo, que consiste en tomar muestras anteriores o adelantadas y reemplazar los términos correspondientes.
 
-  \[
-  C(z) = \frac{z-1}{z} Z \left\{ \mathcal{L}^{-1} \left\{ C(s) \cdot \frac{1}{s} \right\} \right\}
-  \]
+## 3. Transformada Z
 
-## 3. Método de Euler Adelante
-- La aproximación discreta de la derivada es:
+La transformada Z permite obtener una expresión matemática para solucionar ecuaciones de sistemas discretos. A diferencia de la transformada de Laplace, la transformada Z opera en un espacio diferente.
 
-  \[
-  \frac{d}{d(kT)}x(kT) \approx \frac{x(k+1) - x(k)}{T}
-  \]
+### Pasos para la solución de ecuaciones en diferencias utilizando la transformada Z:
+  - Aplicar la transformada Z a la ecuación.
+  - Despejar la variable desconocida o salida del sistema.
+  - Aplicar la transformada Z inversa.
 
-- Aplicando la transformada Z:
-
-  \[
-  sX(s) \approx \frac{z-1}{T} X(z)
-  \]
-
-  Por lo tanto:
-
-  \[
-  s \approx \frac{z-1}{T}
-  \]
-
-## 4. Método de Euler Atrás
-- La aproximación discreta de la derivada es:
-
-  \[
-  \frac{d}{d(kT)}x(kT) \approx \frac{x(k) - x(k-1)}{T}
-  \]
-
-- Aplicando la transformada Z:
-
-  \[
-  sX(s) \approx \frac{1 - z^{-1}}{T} X(z)
-  \]
-
-  Por lo tanto:
-
-  \[
-  s \approx \frac{1 - z^{-1}}{T}
-  \]
-
-## 5. Teorema de Muestreo de Nyquist
-- El teorema de muestreo relaciona la velocidad de muestreo \( f_s \) con la frecuencia de la señal medida.
-- La velocidad de muestreo \( f_s \) debe ser mayor que el doble de la componente de frecuencia más alta en la señal.
-  
-  \[
-  f_s > 2f_{\text{máx}}
-  \]
-
-- Esta frecuencia se conoce como la frecuencia de Nyquist.
-
-# Ejemplos
-
-## Ejemplo 1: Método de Euler Adelante
-
-Dado un sistema continuo descrito por:
-
-\[
-H(s) = \frac{1}{s+1}
-\]
-
-Discretizar usando el método de Euler Adelante con un tiempo de muestreo \( T = 0.1 \).
-
-### Solución:
-
-1. Usamos la aproximación \( s \approx \frac{z-1}{T} \):
-
-   \[
-   H(z) = \frac{1}{\frac{z-1}{T} + 1} = \frac{T}{z-1 + T}
-   \]
-
-2. Con \( T = 0.1 \):
-
-   \[
-   H(z) = \frac{0.1}{z - 0.9}
-   \]
-
-   Este es el sistema discretizado.
-
-## Ejemplo 2: Teorema de Muestreo de Nyquist
-
-Supongamos que tenemos una señal de frecuencia máxima \( f_{\text{máx}} = 500 \text{ Hz} \). Determina la frecuencia mínima de muestreo requerida.
-
-### Solución:
-
-1. Según el teorema de muestreo de Nyquist:
-
-   \[
-   f_s > 2 \times 500 = 1000 \text{ Hz}
-   \]
-
-2. La frecuencia mínima de muestreo requerida es \( f_s > 1000 \text{ Hz} \).
+En las ecuaciones en diferencia, tenemos términos como \( f(k+n) \) o \( f(k-n) \). 
+- La función \( f(k-n) \) se denomina atraso.
+- La función \( f(k+n) \) se denomina adelanto.
 
 # Conclusiones
 
-- **Discretización**: La discretización de controladores es crucial para implementar sistemas de control en tiempo real. La elección del método de discretización (invarianza al impulso, invarianza al paso, métodos de Euler) afecta la precisión y estabilidad del sistema discretizado.
-  
-- **Método de Invarianza al Impulso**: Este método asegura que la respuesta al impulso del sistema discretizado sea idéntica a la del sistema continuo, bajo ciertas condiciones.
+1. **Importancia de la Discretización**: La discretización de funciones continuas, como las senoidales, es esencial para analizar y controlar sistemas en el dominio digital. A través del muestreo, se puede obtener una representación discreta que permite el procesamiento digital de señales. Es fundamental elegir un tiempo de muestreo adecuado para garantizar la precisión de la representación discreta.
 
-- **Método de Invarianza al Paso**: Ideal para sistemas donde la respuesta al escalón es de mayor interés, pero puede no preservar la estabilidad en todos los casos.
+2. **Transformada Z como Herramienta Clave**: La transformada Z es una herramienta indispensable para analizar sistemas discretos. Permite convertir ecuaciones en diferencia, que describen el comportamiento dinámico de sistemas discretos, en expresiones algebraicas más manejables. Esto facilita la solución de dichas ecuaciones y, por ende, el análisis de la estabilidad y respuesta de sistemas digitales.
 
-- **Métodos de Euler**: Ofrecen aproximaciones simples para discretizar sistemas, pero deben ser usados con cuidado, especialmente en sistemas donde la estabilidad es crítica.
+3. **Representación Matemática de Sistemas**: La representación matemática de sistemas a través de ecuaciones en diferencia es crucial para el modelado y análisis de sistemas dinámicos. La correcta formulación de estas ecuaciones permite predecir el comportamiento del sistema bajo diversas condiciones de entrada y ayuda a diseñar controladores eficaces.
 
-- **Teorema de Nyquist**: Es fundamental en la discretización de señales, asegurando que la frecuencia de muestreo sea suficientemente alta para capturar toda la información relevante de la señal original sin aliasing.
+# Ejemplo 1: Discretización de una Función Senoidal
 
-Estos conceptos y métodos son fundamentales en el diseño y análisis de sistemas de control digital, permitiendo una transición efectiva entre sistemas continuos y discretos.
+Supongamos que tenemos la función continua \( y(t) = 3\sin(2t) \). Queremos discretizar esta función tomando muestras cada 0.25 segundos.
+
+1. **Función Continua**: \( y(t) = 3\sin(2t) \)
+2. **Tiempo de Muestreo**: \( T_s = 0.25 \) s
+3. **Función Discreta**: \( y[k] = 3\sin(2 \times 0.25k) = 3\sin(0.5k) \)
+
+Por lo tanto, la función discreta sería \( y[k] = 3\sin(0.5k) \). A medida que se incrementa \( k \), se obtienen los valores de la señal en momentos discretos.
+
+# Ejemplo 2: Solución de una Ecuación en Diferencias usando la Transformada Z
+
+Consideremos la siguiente ecuación en diferencias:
+
+\[
+y(k) - \frac{1}{2}y(k-1) = u(k)
+\]
+
+donde \( u(k) \) es la entrada al sistema y \( y(k) \) es la salida.
+
+**Paso 1: Aplicar la Transformada Z**
+
+Aplicamos la transformada Z a ambos lados de la ecuación:
+
+\[
+Y(z) - \frac{1}{2}z^{-1}Y(z) = U(z)
+\]
+
+**Paso 2: Despejar la variable desconocida \( Y(z) \)**
+
+\[
+Y(z)\left(1 - \frac{1}{2}z^{-1}\right) = U(z)
+\]
+
+\[
+Y(z) = \frac{U(z)}{1 - \frac{1}{2}z^{-1}}
+\]
+
+**Paso 3: Aplicar la Transformada Z Inversa**
+
+La transformada Z inversa nos da la solución en el dominio del tiempo discreto:
+
+\[
+y(k) = \frac{1}{2}^k u(k)
+\]
+
+Esta solución describe cómo la salida \( y(k) \) evoluciona en función de la entrada \( u(k) \) y el número de muestras \( k \).
