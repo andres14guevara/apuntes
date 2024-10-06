@@ -105,7 +105,7 @@ Los **decibelios** (dB) se utilizan para representar la ganancia o potencia. Par
 
 ### Ejemplo de Diagrama de Bode:
 
-![Diagrama de Bode](ruta/a/tu/imagen.png)
+![Diagrama de Bode]([ruta/a/tu/imagen.png](https://github.com/andres14guevara/apuntes/blob/main/Captura%20de%20pantalla%202024-10-05%20191749.png)
 
 ---
 
