@@ -1,132 +1,117 @@
-# Discretización de Controladores
+# Análisis en Frecuencia y Diagramas de Bode
 
-En la discretización de controladores, buscamos una equivalencia entre el espacio de Laplace y el espacio Z.
+## Introducción
 
-## 1. Método de Invarianza al Impulso
-- Se utiliza la respuesta al impulso de \( C(s) \) para obtener \( C(z) \).
-- La transformada de Laplace del impulso \( e(t) = \delta(t) \) es \( e(s) = 1 \).
-- Si \( C(s) \) es estrictamente propia y se asume un tiempo de muestreo \( T \) suficientemente pequeño:
+El análisis en frecuencia es una técnica fundamental para estudiar sistemas dinámicos. Consiste en verificar el comportamiento de un sistema en la salida a partir de cambios en la frecuencia de la señal de entrada. Esto es comúnmente realizado aplicando señales sinusoidales a la entrada.
 
-  \[
-  C(z) = T \cdot Z \left\{ \mathcal{L}^{-1} \{ C(s) \} \bigg|_{t=kT} \right\}
-  \]
+La señal sinusoidal se puede expresar como:
 
-## 2. Método de Invarianza al Paso
-- Sabiendo que la transformada Z de una función escalón es:
+`R = A * sin(ω * kT + θ)`
 
-  \[
-  Z \{ e(t) \} = \frac{z}{z-1}
-  \]
+Donde:
+- `A` es la amplitud,
+- `ω` es la frecuencia angular,
+- `kT` es el tiempo discreto,
+- `θ` es la fase.
 
-- Se pueden igualar las transformadas inversas:
+Al variar la frecuencia de la señal de entrada, se observan cambios en la amplitud y fase de la señal de salida.
 
-  \[
-  Z^{-1} \left\{ C(z) \cdot \frac{z}{z-1} \right\} = \mathcal{L}^{-1} \left\{ C(s) \cdot \frac{1}{s} \right\}
-  \]
+---
 
-- Resolviendo para \( C(z) \):
+## Análisis en Fasores
 
-  \[
-  C(z) = \frac{z-1}{z} Z \left\{ \mathcal{L}^{-1} \left\{ C(s) \cdot \frac{1}{s} \right\} \right\}
-  \]
+Las señales sinusoidales también se pueden representar como **fasores**, lo cual simplifica el análisis de sistemas lineales. Los fasores representan una señal en términos de su amplitud y fase, asumiendo una frecuencia constante.
 
-## 3. Método de Euler Adelante
-- La aproximación discreta de la derivada es:
+### Sistema en Fasores
 
-  \[
-  \frac{d}{d(kT)}x(kT) \approx \frac{x(k+1) - x(k)}{T}
-  \]
+Consideremos un sistema donde la entrada y salida son representadas como fasores:
 
-- Aplicando la transformada Z:
+`G(s) = (A2 ∠ φ2) / (A1 ∠ φ1) = M ∠ φ`
 
-  \[
-  sX(s) \approx \frac{z-1}{T} X(z)
-  \]
+Donde:
+- `M = A2 / A1` es la magnitud relativa entre la entrada y la salida,
+- `φ = φ2 - φ1` es la diferencia de fase entre la entrada y salida.
 
-  Por lo tanto:
+---
 
-  \[
-  s \approx \frac{z-1}{T}
-  \]
+## Expresar Función de Transferencia en Términos de la Frecuencia
 
-## 4. Método de Euler Atrás
-- La aproximación discreta de la derivada es:
+Para analizar un sistema continuo en términos de la frecuencia, utilizamos la transformada de Laplace `s = jω`, y el mapeo de polos y ceros se expresa como:
 
-  \[
-  \frac{d}{d(kT)}x(kT) \approx \frac{x(k) - x(k-1)}{T}
-  \]
+`z = e^(sT)`
 
-- Aplicando la transformada Z:
+Por lo tanto, en términos de la frecuencia, la variable `z` es:
 
-  \[
-  sX(s) \approx \frac{1 - z^{-1}}{T} X(z)
-  \]
+`z = e^(jωT)`
 
-  Por lo tanto:
+---
 
-  \[
-  s \approx \frac{1 - z^{-1}}{T}
-  \]
+## Ejemplo de Función de Transferencia
 
-## 5. Teorema de Muestreo de Nyquist
-- El teorema de muestreo relaciona la velocidad de muestreo \( f_s \) con la frecuencia de la señal medida.
-- La velocidad de muestreo \( f_s \) debe ser mayor que el doble de la componente de frecuencia más alta en la señal.
-  
-  \[
-  f_s > 2f_{\text{máx}}
-  \]
+Consideremos una función de transferencia con un tiempo de muestreo de 0.1 segundos:
 
-- Esta frecuencia se conoce como la frecuencia de Nyquist.
+`H(z) = 1 / [(z - 0.1)(z - 5)]`
 
-# Ejemplos
+Expresada en el dominio de la frecuencia:
 
-## Ejemplo 1: Método de Euler Adelante
+`H(e^(jωT)) = 1 / [(e^(jωT) - 0.1)(e^(jωT) - 5)]`
 
-Dado un sistema continuo descrito por:
+---
 
-\[
-H(s) = \frac{1}{s+1}
-\]
+## Efecto de Parámetros Dinámicos
 
-Discretizar usando el método de Euler Adelante con un tiempo de muestreo \( T = 0.1 \).
+No es posible hacer análisis en frecuencia directamente en tiempo discreto, por lo que se aprovecha la transformación bilineal (Tustin) para aproximar el sistema continuo en tiempo discreto.
 
-### Solución:
+Reemplazando `z = e^(jωT)`, se obtiene:
 
-1. Usamos la aproximación \( s \approx \frac{z-1}{T} \):
+`w = 2 * (z - 1) / [T * (z + 1)]`
 
-   \[
-   H(z) = \frac{1}{\frac{z-1}{T} + 1} = \frac{T}{z-1 + T}
-   \]
+Sustituyendo `w = jv`, resulta:
 
-2. Con \( T = 0.1 \):
+`w = j * (2 / T) * tan(ωT / 2)`
 
-   \[
-   H(z) = \frac{0.1}{z - 0.9}
-   \]
+Y:
 
-   Este es el sistema discretizado.
+`v = (2 / T) * tan(ωT / 2)`
 
-## Ejemplo 2: Teorema de Muestreo de Nyquist
+Si se tiene un sistema en tiempo continuo, por ejemplo:
 
-Supongamos que tenemos una señal de frecuencia máxima \( f_{\text{máx}} = 500 \text{ Hz} \). Determina la frecuencia mínima de muestreo requerida.
+`G(s) = 1 / (s + 10)`
 
-### Solución:
+Se puede obtener la aproximación discreta (ZOH) con `T = 0.1` segundos, y aplicar la transformada `w`:
 
-1. Según el teorema de muestreo de Nyquist:
+`G(z) = 0.06321 / (z - 0.3679)`
 
-   \[
-   f_s > 2 \times 500 = 1000 \text{ Hz}
-   \]
+Y transformando en `w`:
 
-2. La frecuencia mínima de muestreo requerida es \( f_s > 1000 \text{ Hz} \).
+`G(w) = 0.924(-0.05w + 1) / (w + 9.242)`
 
-# Conclusiones
+---
 
-- **Discretización**: La discretización de controladores es crucial para implementar sistemas de control en tiempo real. La elección del método de discretización (invarianza al impulso, invarianza al paso, métodos de Euler) afecta la precisión y estabilidad del sistema discretizado.
-  
-- **Método de Invarianza al Impulso**: Este método asegura que la respuesta al impulso del sistema discretizado sea idéntica a la del sistema continuo, bajo ciertas condiciones.
+## Diagramas de Bode
 
-- **Método de Invarianza al Paso**: Ideal para sistemas donde la respuesta al escalón es de mayor interés, pero puede no preservar la estabilidad en todos los casos.
+Los **diagramas de Bode** son gráficos que muestran cómo la magnitud de la ganancia y el ángulo de desfase de un sistema varían con respecto a la frecuencia de la señal de entrada. Estos diagramas son útiles para el análisis de estabilidad y el diseño de compensadores en sistemas de control.
+
+### Características:
+- Usualmente se presentan en **escala logarítmica**.
+- En sistemas discretos, es importante considerar que los compensadores pierden eficacia en frecuencias altas debido a la transformada `w`.
+- La aproximación de la transformada `w` es válida entre 0 y la **frecuencia de Nyquist**.
+
+### Cálculo de Ganancia:
+
+Los **decibelios** (dB) se utilizan para representar la ganancia o potencia. Para la ganancia, se utiliza la siguiente fórmula:
+
+`AdB = 20 * log10(A)`
+
+### Ejemplo de Diagrama de Bode:
+
+![Diagrama de Bode](ruta/a/tu/imagen.png)
+
+---
+
+## Conclusiones
+
+El análisis en frecuencia y los diagramas de Bode son herramientas poderosas para entender el comportamiento de sistemas dinámicos. A través de la separación de las componentes de magnitud y fase, podemos observar cómo las señales se modifican en términos de la frecuencia de entrada.
 
 - **Métodos de Euler**: Ofrecen aproximaciones simples para discretizar sistemas, pero deben ser usados con cuidado, especialmente en sistemas donde la estabilidad es crítica.
 
