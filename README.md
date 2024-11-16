@@ -39,7 +39,7 @@ u(t) - F_k - F_B = m \cdot a
 ## Imagen Relacionada
 _Aquí puedes subir una imagen que explique o detalle la ecuación en diferencias._
 
-![Espacio para imagen](ruta/imagen.png)
+![]([ruta/imagen.png](https://github.com/andres14guevara/apuntes/blob/main/2%20parte%20primera%20imagen.png))
 
 ---
 
