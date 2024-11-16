@@ -39,7 +39,7 @@ u(t) - F_k - F_B = m \cdot a
 ## Imagen Relacionada
 _Aquí puedes subir una imagen que explique o detalle la ecuación en diferencias._
 
-![]([ruta/imagen.png](https://github.com/andres14guevara/apuntes/blob/main/2%20parte%20primera%20imagen.png))
+![](https://github.com/andres14guevara/apuntes/blob/main/2%20parte%20primera%20imagen.png))
 
 ---
 
@@ -98,7 +98,7 @@ M Y(k+2) + (B T - 2M) Y(k+1) + (M - B T + T^2 K) Y(k) = U(k) T^2
 
 _Aquí puedes subir una imagen que muestre las matrices A, B, C y D._
 
-![Espacio para imagen](ruta/matrices.png)
+![](https://github.com/andres14guevara/apuntes/blob/main/3%20imagen%20.png)
 
 ### Representación Matemática
 
