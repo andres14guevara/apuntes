@@ -1,7 +1,7 @@
 # Espacio de Estados
 
 El espacio de estados es una representación matemática de los sistemas dinámicos que no solamente considera las entradas y salidas sino también otras variables que pueden ayudar a representar de mejor manera la dinámica del sistema.
-
+![](https://github.com/andres14guevara/apuntes/blob/main/cohete.jpg)
 ## Conceptos Principales
 
 ### Representación Interna
